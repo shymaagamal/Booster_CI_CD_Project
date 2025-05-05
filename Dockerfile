@@ -5,15 +5,13 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install required packages: Python 3.6, pip, and dependencies
-RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y python3.6 python3.6-distutils python3-pip && \
-    apt-get install -y curl git && \
-    curl https://bootstrap.pypa.io/get-pip.py | python3.6 && \
-    ln -s /usr/bin/python3.6 /usr/bin/python && \
-    ln -s /usr/local/bin/pip /usr/bin/pip
+RUN apt-get update && apt-get install -y \
+    python3.6 \
+    python3-pip \
+    python3.6-venv \
+    curl \
+    git \
+    && apt-get clean
 
 # Set working directory
 WORKDIR /app
