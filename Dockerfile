@@ -4,9 +4,12 @@ FROM ubuntu:20.04
 # Prevent prompts during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies and Python 3.6
+# Install dependencies and Python 3.6 with venv support from deadsnakes PPA
 RUN apt-get update && \
-    apt-get install -y python3.6 python3-pip python3.6-venv curl git && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3.6 python3.6-pip python3.6-venv curl git && \
     apt-get clean
 
 # Set working directory
