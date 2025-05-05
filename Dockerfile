@@ -1,23 +1,29 @@
-# Step 1: Use the official Python image as the base image
-FROM python:3.8-slim
+# Step 1: Use Ubuntu as base image
+FROM ubuntu:20.04
 
-# Step 2: Set the working directory inside the container
+# Step 2: Set environment variables to skip interactive prompts during package installs
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Step 3: Update Ubuntu and install Python, pip, and other dependencies
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-dev build-essential libpq-dev curl && \
+    apt-get clean
+
+# Step 4: Set the working directory
 WORKDIR /app
 
-# Step 3: Copy the requirements file into the container
+# Step 5: Copy and install Python dependencies
 COPY requirements.txt /app/
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Step 4: Install the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Step 5: Copy the entire project into the container
+# Step 6: Copy the full project into the container
 COPY . /app/
 
-# Step 6: Expose the port the app will run on
+# Step 7: Expose the port the Django app will run on
 EXPOSE 8000
 
-# Step 7: Set the environment variable to indicate we're in a production environment
-ENV PYTHONUNBUFFERED 1
+# Step 8: Set environment variable to prevent output buffering
+ENV PYTHONUNBUFFERED=1
 
-# Step 8: Run the Django app (or run your preferred command to start the app)
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Step 9: Run Django development server
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
